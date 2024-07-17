@@ -55,7 +55,7 @@ greenlet @ file:///Users/runner/miniforge3/conda-bld/greenlet_1674937749146/work
 h11 @ file:///home/conda/feedstock_root/build_artifacts/h11_1664132893548/work
 huggingface-hub==0.16.4
 idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1663625384323/work
-ijson @ file:///home/conda/feedstock_root/build_artifacts/ijson_1717674449751/work
+ijson
 importlib-metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1701625711742/work
 importlib_resources @ file:///home/conda/feedstock_root/build_artifacts/importlib_resources_1711040877059/work
 iopath==0.1.10
