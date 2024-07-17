@@ -67,8 +67,8 @@ def load_from_json(key):
     current_file = Path(__file__).resolve()
     current_directory = current_file.parent
     data_directory = current_directory / "data"
-    json_filename = f"{data_directory}/player_db_processed_{start_year}.json.gz"
-    index_filename = f"{data_directory}/player_db_processed_{start_year}_index.json"
+    json_filename = f"{data_directory}/player_db_processed_2014.json.gz"
+    index_filename = f"{data_directory}/player_db_processed_2014_index.json"
 
     try:
         with open(index_filename, 'r') as file:
