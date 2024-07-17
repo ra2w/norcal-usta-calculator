@@ -59,9 +59,12 @@ start_year = 2014
 
 import gzip
 import json
-
+import streamlit as st
 
 def load_from_json(key):
+    current_directory = os.getcwd()
+    st.write("Current Working Directory:", current_directory)
+    
     data_directory = "./data/"
     json_filename = f"{data_directory}/player_db_processed_{start_year}.json.gz"
     index_filename = f"{data_directory}/player_db_processed_{start_year}_index.json"
@@ -405,9 +408,9 @@ if pid is not None:
 else:
     st.warning("No player found!")
 
-st.sidebar.markdown('''<small>[Norcal USTA Calculator v0.95](https://github.com/ra2w/norcal-usta-calculator)  
+st.sidebar.markdown('''<small>[Norcal USTA Calculator v0.95](https://github.com/daniellewisDL/streamlit-cheat-sheet)  
                     | July 2024 | 
-                    [Ramu Arunachalam](https://github.com/ra2w)</small>''', unsafe_allow_html=True)
+                    [Ramu Arunachalam](https://daniellewisdl.github.io/)</small>''', unsafe_allow_html=True)
 
 
 
