@@ -90,30 +90,7 @@ def load_from_json(key):
     except FileNotFoundError:
         st.error(f"No data found for key: {key}")
         return None
-# def load_from_json(key):
-#         data_directory = "./data/"
-#         json_filename = f"{data_directory}/player_db_processed_{start_year}.json"
-#         index_filename = f"{data_directory}/player_db_processed_{start_year}_index.json"
 
-#         try:
-#             with open(index_filename, 'r') as file:
-#                 index = json.load(file)
-#         except FileNotFoundError:
-#             st.error(f"Error: Index file not found: {index_filename}")
-#             return None
-#         try:
-#             with open(json_filename, 'r') as file:
-#                 file.seek(index[key])
-#                 player_json = file.readline()  # Read the JSON string at the indexed position
-#                 player_data = json.loads(player_json)
-#                 if key in player_data:
-#                     return Player.from_dict_all(player_data[key])
-#                 else:
-#                     st.error(f"Error: Player ID not found in data: {key}")
-#                     return None
-#         except FileNotFoundError:
-#             st.error(f"No data found for key: {key}")
-#             return None
         
 class LazyLoadDict(dict):
     def __init__(self, *args, **kwargs):
@@ -414,9 +391,9 @@ if pid is not None:
 else:
     st.warning("No player found!")
 
-st.sidebar.markdown('''<small>[Norcal USTA Calculator v0.95](https://github.com/daniellewisDL/streamlit-cheat-sheet)  
+st.sidebar.markdown('''<small>[Norcal USTA Calculator v0.95](https://github.com/ra2w/norcal-usta-calculator/blob/master/rating_engine/app.py)  
                     | July 2024 | 
-                    [Ramu Arunachalam](https://daniellewisdl.github.io/)</small>''', unsafe_allow_html=True)
+                    [Ramu Arunachalam](https://github.com/ra2w)</small>''', unsafe_allow_html=True)
 
 
 
