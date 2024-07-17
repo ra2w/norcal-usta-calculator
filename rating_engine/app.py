@@ -65,11 +65,8 @@ import streamlit as st
 def load_from_json(key):
 
     current_file = Path(__file__).resolve()
-    st.write(current_file)
     current_directory = current_file.parent
-    st.write(current_directory)
     data_directory = current_directory / "data"
-    st.write(data_directory)
     json_filename = f"{data_directory}/player_db_processed_2014.json.gz"
     index_filename = f"{data_directory}/player_db_processed_2014_index.json"
 
@@ -348,9 +345,7 @@ def scorecard_to_dict(row, avg_rating_gap, raw_perf_gap):
 ########################  Main Streamlit App  ########################
 st.title("Ratings Evaluation")
 current_file = Path(__file__).resolve()
-st.write(current_file)
 current_directory = current_file.parent
-st.write(current_directory)
 data_directory = current_directory / "data"
 index_filename = f"{data_directory}/name_{start_year}_index.json"
 
