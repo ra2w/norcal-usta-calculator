@@ -385,7 +385,7 @@ if pid is not None:
                     dynamic = row[f"{l}_l3_dynamic_after"][-1]
                     break
             st.text(f"{first_name} {last_name} : {dynamic:.2f}")
-            with st.expander(f"{row['Match Date']}: Match Details"):
+            with st.expander(f"{row['Match Date']}: Click for Match Details"):
                 html_display(team_details, score_details, match_details, row['self_rated'])
 
 else:
