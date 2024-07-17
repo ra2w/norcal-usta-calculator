@@ -347,7 +347,14 @@ def scorecard_to_dict(row, avg_rating_gap, raw_perf_gap):
 
 ########################  Main Streamlit App  ########################
 st.title("Ratings Evaluation")
-with open(f'data/name_{start_year}_index.json', 'r') as file:
+current_file = Path(__file__).resolve()
+st.write(current_file)
+current_directory = current_file.parent
+st.write(current_directory)
+data_directory = current_directory / "data"
+index_filename = f"{data_directory}/name_{start_year}_index.json"
+
+with open(index_filename, 'r') as file:
     name_index =  json.load(file)
     
 
