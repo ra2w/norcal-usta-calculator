@@ -407,7 +407,7 @@ else:
 
 st.sidebar.markdown('''<small>[Norcal USTA Calculator v0.95](https://github.com/daniellewisDL/streamlit-cheat-sheet)  
                     | July 2024 | 
-                    [Ramu Arunachalam](https://daniellewisdl.github.io/)</small>''', unsafe_allow_html=True)
+                    [Ramu Arunachalam](https://github.com/ra2w)</small>''', unsafe_allow_html=True)
 
 
 
