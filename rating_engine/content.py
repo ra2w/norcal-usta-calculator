@@ -1,7 +1,7 @@
 from jinja2 import Template
 import streamlit as st
 import re
-
+from pathlib import Path
 from content_dict import CALCULATION_DICT
 
 def format_calculation(calc):
@@ -30,7 +30,10 @@ def format_calculation(calc):
 
 
 def match_to_html(team_details, score_details, match_details, match_with_self_rate):
-    with open('content.html', 'r') as file:
+    current_file = Path(__file__).resolve()
+    current_directory = current_file.parent
+    filename = current_directory / 'content.html'
+    with open(filename, 'r') as file:
         template = Template(file.read())
 
     teams = [{"w": team_details['w1'], "l": team_details['l1']}]
