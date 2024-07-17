@@ -50,6 +50,7 @@ import ijson
 import numpy as np
 import pandas as pd
 import streamlit as st
+from pathlib import Path
 
 # Local module imports
 from player import Player, NUM_DYNAMIC_RATINGS
@@ -62,10 +63,10 @@ import json
 import streamlit as st
 
 def load_from_json(key):
-    current_directory = os.getcwd()
-    st.write("Current Working Directory:", current_directory)
-    
-    data_directory = "./data/"
+
+    current_file = Path(__file__).resolve()
+    current_directory = current_file.parent
+    data_directory = current_directory / "data"
     json_filename = f"{data_directory}/player_db_processed_{start_year}.json.gz"
     index_filename = f"{data_directory}/player_db_processed_{start_year}_index.json"
 
