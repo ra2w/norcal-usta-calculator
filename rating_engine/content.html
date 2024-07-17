@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, .ratings-container {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .ratings-container .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .ratings-container h1 {
+            background-color: #3498db;
+            color: white;
+            margin: 0;
+            padding: 16px;
+            font-size: 20px;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .ratings-container .content {
+            padding: 20px;
+        }
+
+        .table-container {
+            max-height: 1800px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .ratings-container table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .ratings-container thead {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 1;
+        }
+
+        .ratings-container th, .ratings-container td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .ratings-container th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333333;
+            text-transform: none;
+            padding: 12px 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .ratings-container .calculation-wrapper {
+            display: inline-block;
+            background-color: #ffffd4;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .ratings-container .calculation {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+
+        .score-red { color: red; }
+        .function-blue { color: blue; }
+        .number { color: #098658; }
+        .nan { color: #ff00ff; }
+        .number.negative { color: red; }
+        .new-dynamic {
+            color: #098658;
+            font-weight: bold;
+        }
+
+        .new-match {
+            color: blue;
+        }
+
+        .footnote {
+            font-size: 12px;
+            color: blue;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .superscript {
+            vertical-align: super;
+            font-size: smaller;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .match-date {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin: 10px 0;
+            font-style: italic;
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .ratings-container .container {
+                margin: 20px auto;
+            }
+            .ratings-container th, .ratings-container td {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ratings-container">
+        <div class="container">
+            <h1>{{match_type}} Match Ratings Evaluation</h1>
+            <div class="match-date">{{match_date}}</div>
+            <div class="content">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Winner(s)</th>
+                                <th>Loser(s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in teams %}
+                            <tr>
+                                <td><div class="calculation-wrapper"><span class="calculation">{{row.w | safe}}</span></div></td>
+                                <td>{{row.l | safe}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <h3>{{score}}</h3>
+                <small><span style="color: blue;">Win Ratio = Games Won / Total Games Played =<b>{{win_ratio}}</b></span></small>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Calculation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in calculations %}
+                            <tr>
+                                <td>{{row.description | safe}}</td>
+                                <td><div class="calculation-wrapper"><span class="calculation">{{row.calculation | safe}}</span></div></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Players</th>
+                                <th>Match Ratings</th>
+                                <th>Dynamic Rating<a href="#footnote" class="superscript">*</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in match_updates %}
+                            <tr>
+                                <td>{{row.name | safe}}</td>
+                                <td><div class="calculation-wrapper"><span class="calculation">{{row.match_rating | safe}}</span></div></td>
+                                <td><div class="calculation-wrapper"><span class="calculation">{{row.dynamic_rating | safe}}</span></div></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <p id="footnote" class="footnote">* Dynamic rating = match rating averaged with 3 previous dynamic ratings</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
