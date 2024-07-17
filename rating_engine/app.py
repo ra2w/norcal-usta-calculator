@@ -405,7 +405,7 @@ if pid is not None:
 else:
     st.warning("No player found!")
 
-st.sidebar.markdown('''<small>[Norcal USTA Calculator v0.95](https://github.com/daniellewisDL/streamlit-cheat-sheet)  
+st.sidebar.markdown('''<small>[Norcal USTA Calculator v0.95](https://github.com/ra2w/norcal-usta-calculator)  
                     | July 2024 | 
                     [Ramu Arunachalam](https://github.com/ra2w)</small>''', unsafe_allow_html=True)
 
