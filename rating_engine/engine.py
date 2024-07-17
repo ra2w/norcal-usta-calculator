@@ -285,8 +285,8 @@ def process_normal_match(row, details=None):
 
     row['w1_new_match'] = (adj / 1) + row['w1_dynamic']
     row['w2_new_match'] = (adj / 1) + row['w2_dynamic'] if not pd.isna(row['w2_dynamic']) else np.nan
-    row['l1_new_match'] = row['l1_dynamic'] - (adj / 1)
-    row['l2_new_match'] = row['l2_dynamic'] - (adj / 1) if not pd.isna(row['l2_dynamic']) else np.nan
+    row['l1_new_match'] = row['l1_dynamic'] - (adj / 2)
+    row['l2_new_match'] = row['l2_dynamic'] - (adj / 2) if not pd.isna(row['l2_dynamic']) else np.nan
 
     num_partners = 1 if 'Singles' in row['Line'] else 2
 
