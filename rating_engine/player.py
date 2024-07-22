@@ -26,6 +26,15 @@ console_handler.setFormatter(formatter)
 # Add handlers to the logger
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
+import math
+def fast_nanmean(arr):
+    valid_sum = 0
+    count = 0
+    for value in arr:
+        if value is not None and not math.isnan(value):
+            valid_sum += value
+            count += 1
+    return valid_sum / count if count > 0 else None
 
 
 NUM_DYNAMIC_RATINGS = 3
@@ -59,7 +68,7 @@ class Player:
 
         if self.is_self_rated(row['Year']) and self.count_ratings() < 3:
             if self.count_ratings() == 2:
-                new_dynamic = np.nanmean(np.concatenate([np.array([match_rating]),self.get_all_dynamic()]))
+                new_dynamic = fast_nanmean(np.concatenate([np.array([match_rating]),self.get_all_dynamic()]))
                 self.dynamic = deque([np.nan]*NUM_DYNAMIC_RATINGS, maxlen=NUM_DYNAMIC_RATINGS)
                 self.dynamic.append(new_dynamic)
             else:
@@ -67,7 +76,7 @@ class Player:
                 self.dynamic.append(match_rating)
             self.self_rate_match_count += 1
         else:       
-            new_dynamic = np.nanmean(np.concatenate([np.array([match_rating]),self.get_all_dynamic()]))
+            new_dynamic = fast_nanmean(np.concatenate([np.array([match_rating]),self.get_all_dynamic()]))
             # Append new rating, oldest rating is automatically dropped if exceeds maxlen
             self.dynamic.append(new_dynamic)
 
@@ -75,7 +84,7 @@ class Player:
 
     def save_match_row(self, row):
         if row is not None:
-            self.matches_dict[row['Match Date']] = {'row':row.to_dict()}
+            self.matches_dict[row['Match Date']] = {'row':row}
 
 
     def count_ratings(self):
@@ -183,14 +192,13 @@ class Player:
             'Correct': estimated_rating_str in cur_year_rating_str
         }
 
-
-        # if df_rating_changes is None, create it
-        # if it exists, append the new rating change
-        if self.df_rating_changes is not None:
-            self.df_rating_changes = pd.concat([self.df_rating_changes, pd.DataFrame([new_record_dict])], ignore_index=True)
-        else:
-            # Create the DataFrame if it does not exist
-            self.df_rating_changes = pd.DataFrame([new_record_dict])
+        # # if df_rating_changes is None, create it
+        # # if it exists, append the new rating change
+        # if self.df_rating_changes is not None:
+        #     self.df_rating_changes = pd.concat([self.df_rating_changes, pd.DataFrame([new_record_dict])], ignore_index=True)
+        # else:
+        #     # Create the DataFrame if it does not exist
+        #     self.df_rating_changes = pd.DataFrame([new_record_dict])
             
         # 2015 one-time adjustment
         # Since 2014 is the first year in our records. The start ratings for 2014 are approximate
@@ -232,7 +240,7 @@ class Player:
 
         # return the latest dynamic rating
         return self.dynamic[-1]
-        #return np.nanmean(self.match_r)
+        #return fast_nanmean(self.match_r)
     
 
     def get_all_dynamic(self):
@@ -242,7 +250,7 @@ class Player:
     def get_avg_self_rate_dynamic(self):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", category=RuntimeWarning)
-            m = np.nanmean(self.dynamic)
+            m = fast_nanmean(self.dynamic)
             return m
 
     def get_base_est_rating(self, year):

@@ -62,13 +62,18 @@ import gzip
 import json
 import streamlit as st
 
-def load_from_json(key):
+from pathlib import Path
+import json
+import gzip
+import streamlit as st
 
+def load_from_json(key):
     current_file = Path(__file__).resolve()
     current_directory = current_file.parent
     data_directory = current_directory / "data"
-    json_filename = f"{data_directory}/player_db_processed_2014.json.gz"
-    index_filename = f"{data_directory}/player_db_processed_2014_index.json"
+    json_filename = data_directory / "player_db_processed_2014.json"
+    compressed_json_filename = json_filename.with_suffix('.json.gz')
+    index_filename = data_directory / "player_db_processed_2014_index.json"
 
     try:
         with open(index_filename, 'r') as file:
@@ -77,10 +82,14 @@ def load_from_json(key):
         st.error(f"Error: Index file not found: {index_filename}")
         return None
 
+    # Determine which file to use
+    file_to_use = json_filename if json_filename.exists() else compressed_json_filename
+    open_func = open if file_to_use.suffix == '.json' else gzip.open
+
     try:
-        with gzip.open(json_filename, 'rt') as file:
+        with open_func(file_to_use, 'rt') as file:
             file.seek(index[key])
-            player_json = file.readline()  # Read the JSON string at the indexed position
+            player_json = file.readline()
             player_data = json.loads(player_json)
             if key in player_data:
                 return Player.from_dict_all(player_data[key])
@@ -90,7 +99,6 @@ def load_from_json(key):
     except FileNotFoundError:
         st.error(f"No data found for key: {key}")
         return None
-
         
 class LazyLoadDict(dict):
     def __init__(self, *args, **kwargs):

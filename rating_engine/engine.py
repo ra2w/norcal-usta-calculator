@@ -97,6 +97,15 @@ from rich.text import Text
 # Local application imports
 from player import Player, NUM_DYNAMIC_RATINGS
 
+import math
+def fast_nanmean(arr):
+    valid_sum = 0
+    count = 0
+    for value in arr:
+        if value is not None and not math.isnan(value):
+            valid_sum += value
+            count += 1
+    return valid_sum / count if count > 0 else None
 
 console = Console()
 
@@ -278,7 +287,7 @@ def process_normal_match(row, details=None):
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=RuntimeWarning)
-        adj = np.nanmean([row['l1_dynamic'], row['l2_dynamic']]) + adj_perf_gap - np.nanmean([row['w1_dynamic'], row['w2_dynamic']])
+        adj = fast_nanmean([row['l1_dynamic'], row['l2_dynamic']]) + adj_perf_gap - fast_nanmean([row['w1_dynamic'], row['w2_dynamic']])
     
     row['raw_perf_gap'] = adj_perf_gap
     row['adj'] = adj
@@ -297,8 +306,8 @@ def process_normal_match(row, details=None):
         details['adj_perf_gap'] = adj_perf_gap
         details['w1_dynamic'] = w1_r
         details['w2_dynamic'] = w2_r
-        details['avg_winning_team'] = np.nanmean([row['w1_dynamic'], row['w2_dynamic']])
-        details['avg_losing_team'] = np.nanmean([row['l1_dynamic'], row['l2_dynamic']])
+        details['avg_winning_team'] = fast_nanmean([row['w1_dynamic'], row['w2_dynamic']])
+        details['avg_losing_team'] = fast_nanmean([row['l1_dynamic'], row['l2_dynamic']])
                                                  
         details['l1_dynamic'] = l1_r
         details['l2_dynamic'] = l2_r
@@ -379,7 +388,7 @@ def calculate_self_rate_dynamic(o1_dynamic, o2_dynamic, partner_dynamic, raw_per
 
         if num_self_ratings in (0, 1):
             # Calculate when there are fewer than 2 existing ratings
-            avg_opponents = np.nanmean([o1_dynamic, o2_dynamic])
+            avg_opponents = fast_nanmean([o1_dynamic, o2_dynamic])
             adjusted_partner_dynamic = 0 if np.isnan(partner_dynamic) else partner_dynamic
             sr_dynamic = avg_opponents * num_partners + raw_perf_gap*num_partners - adjusted_partner_dynamic
 
@@ -400,8 +409,8 @@ def calculate_self_rate_dynamic(o1_dynamic, o2_dynamic, partner_dynamic, raw_per
 
         elif num_self_ratings == 2:
             # Adjust rating when there are exactly 2 existing ratings
-            avg_opponents = np.nanmean([o1_dynamic, o2_dynamic])
-            avg_sr_team = np.nanmean([sr_avg_dynamic, partner_dynamic])
+            avg_opponents = fast_nanmean([o1_dynamic, o2_dynamic])
+            avg_sr_team = fast_nanmean([sr_avg_dynamic, partner_dynamic])
             rating_gap = avg_sr_team - avg_opponents
             adj_perf_gap = compute_adj_raw_performance_gap(raw_perf_gap, rating_gap)
             delta = adj_perf_gap - rating_gap
@@ -492,9 +501,11 @@ def update_player_ratings(row, player_db, player_ids):
             if not pd.isna(new_match_rating):
                 player_db[player_id].add_new_match_rating(new_match_rating, row)
 
-def process_one_match(row, player_db):
+def process_one_match(row_series, player_db):
     self_rated_count = 0
     self_rated_col = None
+
+    row = row_series.to_dict()
     
     row['self_rated'] = False
     row['self_rated_pid'] = np.nan
@@ -798,9 +809,6 @@ def main(start_year, max_iterations):
     panel = Panel(info_text, expand=True)
     console.print(panel)
 
-    #df, player_db = load_all(info_text, start_year)
-
-    
     df = load_filter_and_consolidate_matches(start_year)
     player_db = {}
     if max_iterations > 0:
@@ -812,9 +820,6 @@ def main(start_year, max_iterations):
     console.print(f"The rating engine is processing [bold green]{df_len:,} matches[/bold green]:")
     tqdm.pandas()
     df = df.progress_apply(process_one_match, axis=1, args = (player_db,))
-
-    # dump df to disk
-    df.to_csv("./data/processed_matches.csv", index=False)
 
     create_json_with_byte_index(player_db, start_year)
 
